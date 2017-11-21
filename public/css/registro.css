@@ -1,0 +1,28 @@
+#formulario{
+    box-shadow: 0 0  10px grey;
+    margin: auto;
+    padding: 1rem;
+
+}
+
+#formulario h2{
+    text-align: center;
+
+}
+
+input{
+margin: auto;
+}
+
+header{
+    font-size: 10vw;
+    font-weight: 500;
+}
+
+.inicio{
+    color: #2937d0;
+}
+.inicio:hover{
+    text-decoration: none;
+    color: #2937d0;
+}

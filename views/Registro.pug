@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/css/registro.css')
+    body
+        .container
+
+            header.card.text-center.mb-3.mt-3
+                .card-header
+                    a(href="/").inicio Sharic
+
+            form(action="registroComp" method="post")#formulario
+                h2= title
+                .form-group
+                    label(for="nombre").col-form-label Nombre
+                    input(type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre").form-control
+                    //small(id="passwordHelpInline" class="text-muted") Nombre de usuario.
+
+                .form-group
+                    label(for="contraseña") Contraseña
+                    input(type="password" class="form-control" id="contraseña" name="contraseña"  placeholder="Contraseña")
+
+                .row
+                    input(type="submit" value="Registrar" name="Enviar").btn.btn-success
