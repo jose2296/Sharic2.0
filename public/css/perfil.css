@@ -73,6 +73,8 @@
 .contenedorPerfil .contenido .top ul li a:hover, .contenedorPerfil .contenido .playlist ul li a:hover {
     background: #c3c3c3; }
 
+
+/*
 @media all and (max-width: 650px) {
     body {
         font-size: 5.5vw;
@@ -83,4 +85,4 @@
     .contenedorPerfil .informacion .usuario p, .contenedorPerfil .informacion .cancion p {
         font-size: 5.5vw; } }
 
-/*# sourceMappingURL=perfil.css.map */
+ */

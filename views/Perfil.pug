@@ -6,8 +6,6 @@ block content
 
     body
         include nav2
-        h1= email
-
         .contenedorPerfil.container
             .informacion
                 .imagen
@@ -17,7 +15,7 @@ block content
                 .cancion
                     p ULTIMA CANCION
 
-                a(href="/Perfil/Ajustes")
+                a(href="#")
                     span(class="fa fa-cog")
             .contenido
                 .descripcion
@@ -26,15 +24,17 @@ block content
                 .contenidoPerfil
                     .top
                         h4
-                            a(href="/Perfil/Top-Canciones") Top Canciones
+                            a(href="#") Top Canciones
                         ul
-                            for item in datos.canciones
-                                li
-                                    a(href="#")= item
+                            if datos.canciones
+                                for item in datos.canciones
+                                    li
+                                        a(href="#")= item
                     .playlist
                         h4
                             a(href="/Perfil/PlayList") PlayList
                         ul
-                            for item in datos.playlists
-                                li
-                                    a(href="#")= item
+                            if datos.playlists
+                                for item in datos.playlists
+                                    li
+                                        a(href="#")= item

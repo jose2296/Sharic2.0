@@ -1,25 +1,36 @@
-#menu{
+#menu {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%; 
-background: linear-gradient( to right,#2F7340,#045080);
+    width: 100%;
+    background: linear-gradient(to right, #2F7340, #045080);
 }
+
 #menu ul {
     list-style-type: none;
-    display: flex; }
+    display: flex;
+
+    margin: 0;
+}
+
 #menu ul li {
     display: flex;
-    flex: 1; }
+    flex: 1;
+}
+
 #menu ul li a {
     text-align: center;
     flex: 1;
-    background: none;
-    padding: 1rem;
-    transition: background 0.8s; }
-#menu ul li a.active {
-     }
-#menu ul li a:hover {
-   }
 
-/*# sourceMappingURL=nav.css.map */
+    padding: 1rem;
+    color: #fff;
+}
+
+#menu ul li a.active {
+}
+
+#menu ul li a:hover {
+
+    background: red;
+}
+
