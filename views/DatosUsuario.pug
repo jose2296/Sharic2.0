@@ -11,16 +11,17 @@ block content
                 .card-header
                     a(href="/").inicio Sharic
 
-            form(action="registroComp" method="post")#formulario
+            form(action="datosUsuario" method="post")#formulario
                 h2= title
                 .form-group
-                    label(for="email").col-form-label Nombre
-                    input(type="email" class="form-control" id="email" name="email" placeholder="Email").form-control
+                    label(for="nombre").col-form-label Nombre
+                    input(type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre").form-control
                     //small(id="passwordHelpInline" class="text-muted") Nombre de usuario.
 
                 .form-group
-                    label(for="contraseña") Contraseña
-                    input(type="password" class="form-control" id="contraseña" name="contraseña"  placeholder="Contraseña")
+                    label(for="descripcion").col-form-label Descripcion
+                    input(type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion").form-control
+
 
                 .row
                     input(type="submit" value="Registrar" name="Enviar").btn.btn-success

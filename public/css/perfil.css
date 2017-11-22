@@ -1,0 +1,86 @@
+/*--- PERFIL -----*/
+.contenedorPerfil .informacion {
+    padding-top: 1rem;
+    width: 100%;
+    overflow: auto;
+    background: #ffffff;
+    box-shadow: 0 0 30px grey;
+    border-radius: 0 0 20px 20px;
+    position: relative; }
+.contenedorPerfil .informacion a {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: red;
+    color: #fff;
+    text-align: center;
+    padding: 1rem; }
+.contenedorPerfil .informacion a:hover {
+    background: #1E39C6; }
+.contenedorPerfil .informacion .usuario, .contenedorPerfil .informacion .cancion {
+    padding: 1.5rem 0;
+    font-size: 3vw; }
+.contenedorPerfil .informacion .imagen {
+    width: 25%;
+    float: left;
+    text-align: center;
+    padding: 0 0.7rem 0.7rem 0.7rem; }
+.contenedorPerfil .informacion .imagen img {
+    width: 90%;
+    border-radius: 50%; }
+.contenedorPerfil .informacion .usuario {
+    float: left;
+    width: 75%; }
+.contenedorPerfil .informacion .usuario p {
+    width: 75%;
+    float: left;
+    text-align: center; }
+.contenedorPerfil .informacion .cancion {
+    float: left;
+    width: 75%; }
+.contenedorPerfil .informacion .cancion p {
+    text-align: center; }
+
+.contenedorPerfil .contenido {
+    margin: 1.5rem auto 10rem auto;
+    background: #ffffff;
+    padding: 1rem; }
+.contenedorPerfil .contenido .descripcion p {
+    font-size: 3.5vw; }
+.contenedorPerfil .contenido .top, .contenedorPerfil .contenido .playlist {
+    margin-top: 1rem; }
+.contenedorPerfil .contenido .top h4, .contenedorPerfil .contenido .playlist h4 {
+    text-align: center; }
+.contenedorPerfil .contenido .top h4 a, .contenedorPerfil .contenido .playlist h4 a {
+    padding: 0.4rem;
+    display: block;
+    color: #000; }
+.contenedorPerfil .contenido .top h4 a:hover, .contenedorPerfil .contenido .playlist h4 a:hover {
+    background: red; }
+.contenedorPerfil .contenido .top ul, .contenedorPerfil .contenido .playlist ul {
+    list-style-type: none;
+    background: #dddddd; }
+.contenedorPerfil .contenido .top ul li, .contenedorPerfil .contenido .playlist ul li {
+    display: flex;
+    flex-direction: column; }
+.contenedorPerfil .contenido .top ul li a, .contenedorPerfil .contenido .playlist ul li a {
+    flex: 1;
+    width: 100%;
+    padding: 0.4rem;
+    text-align: center;
+    color: #000;
+    transition: background 0.8s; }
+.contenedorPerfil .contenido .top ul li a:hover, .contenedorPerfil .contenido .playlist ul li a:hover {
+    background: #c3c3c3; }
+
+@media all and (max-width: 650px) {
+    body {
+        font-size: 5.5vw;
+        width: 100%; }
+    .contenedorPerfil .informacion .usuario, .contenedorPerfil .informacion .cancion {
+        padding: 2% 0;
+        margin: 0; }
+    .contenedorPerfil .informacion .usuario p, .contenedorPerfil .informacion .cancion p {
+        font-size: 5.5vw; } }
+
+/*# sourceMappingURL=perfil.css.map */

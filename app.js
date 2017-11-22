@@ -10,6 +10,7 @@ var users = require('./routes/users');
 
 var firebase = require("firebase");
 
+var usuario;
 
 
 var app = express();

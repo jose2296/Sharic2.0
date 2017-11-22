@@ -2,17 +2,24 @@ extends layout
 
 block content
     link(rel='stylesheet', href='/css/registro.css')
-
     body
         include nav
         .container
-
             header.card.text-center.mb-3.mt-3
                 .card-header
                     a(href="/").inicio Sharic
 
-            form(action="registroComp" method="post")#formulario
+
+            form(action="login" method="post")#formulario
                 h2= title
+
+                if error
+                    div(role="alert").alert.alert-danger
+                        span= error
+                if warning
+                    div(role="alert").alert.alert-warning
+                        span= warning
+
                 .form-group
                     label(for="email").col-form-label Nombre
                     input(type="email" class="form-control" id="email" name="email" placeholder="Email").form-control
@@ -23,4 +30,4 @@ block content
                     input(type="password" class="form-control" id="contraseña" name="contraseña"  placeholder="Contraseña")
 
                 .row
-                    input(type="submit" value="Registrar" name="Enviar").btn.btn-success
+                    input(type="submit" value="Login" name="Enviar").btn.btn-success
