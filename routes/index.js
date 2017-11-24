@@ -1,15 +1,33 @@
 var express = require('express');
 var router = express.Router();
-
+var SpotifyWebApi = require('spotify-web-api-node');
 var firebase = require('firebase');
 
 var datos;
 var usuario;
+
+
+// credentials are optional
+var spotifyApi = new SpotifyWebApi({
+    clientId: '7b1fbfaea0ac4d999c51ff9c5c1d0edc',
+    clientSecret: '86aa797f1a1d4b13b55d7d9b6a467c8d',
+    redirectUri: 'http://localhost:3000/perfil'
+});
+
+    router.get("/prueba", function (req, res, next) {
+
+        res.redirect("https://accounts.spotify.com/authorize/?" +
+            "client_id=7b1fbfaea0ac4d999c51ff9c5c1d0edc" +
+            "&response_type=code&" +
+            "redirect_uri=http://localhost:3000/Perfil"
+        );
+
+
+})
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('Inicio');
 });
-
 
 router.get('/Registro', function (req, res, next) {
     res.render('Registro', {title: 'Registro'});
@@ -45,7 +63,7 @@ router.get('/Perfil', function (req, res, next) {
         console.log("PERFIL" + datos.nombre);
         res.render('Perfil', {datos: datos});
     } else {
-        res.render("Login")
+        res.render("Login",{title: 'Login'})
     }
 
 });
@@ -230,7 +248,7 @@ router.post("/TopCanciones", function (req, res, next) {
 
     len = datos.canciones.length;
     for (i = 0; i < len; i += 1) {
-        canciones.push(datos.canciones[i])
+
 
     }
 
