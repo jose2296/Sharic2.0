@@ -13,6 +13,9 @@ block content
 
             form(action="registroComp" method="post")#formulario
                 h2= title
+                if error
+                    div(role="alert").alert.alert-danger
+                        span= error
                 .form-group
                     label(for="email").col-form-label Nombre
                     input(type="email" class="form-control" id="email" name="email" placeholder="Email").form-control

@@ -7,52 +7,70 @@ var datos;
 var usuario;
 
 
+var clientId = "22f91a46b6aa44ed93001f9230b9abff";
+var clientSecret = "7eba33c8ac1a43a99f670324b3df8938";
+var redirect = "http://localhost:3000/aaa";
+
+
 // credentials are optional
 var spotifyApi = new SpotifyWebApi({
-    clientId: '7b1fbfaea0ac4d999c51ff9c5c1d0edc',
-    clientSecret: '86aa797f1a1d4b13b55d7d9b6a467c8d',
-    redirectUri: 'http://localhost:3000/perfil'
+    clientId: clientId,
+    clientSecret: clientSecret,
+    redirectUri: redirect
 });
 
-    router.get("/prueba", function (req, res, next) {
+router.get("/prueba", function (req, res, next) {
+    res.redirect("https://accounts.spotify.com/authorize/?" +
+        "client_id=" + clientId +
+        "&response_type=code&" +
+        "redirect_uri=" + redirect
+    );
+});
 
-        res.redirect("https://accounts.spotify.com/authorize/?" +
-            "client_id=7b1fbfaea0ac4d999c51ff9c5c1d0edc" +
-            "&response_type=code&" +
-            "redirect_uri=http://localhost:3000/Perfil"
-        );
+
+router.get("/aaa", function (req, res, next) {
+    console.log(req.query.code);
+    res.render("Login")
+});
 
 
-})
+
+
+
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('Inicio');
 });
 
+/* GET Pagina de registro */
 router.get('/Registro', function (req, res, next) {
     res.render('Registro', {title: 'Registro'});
 });
 
 
+function cogerDatosUsuarioDByRendePerfil(req, res, session) {
+    usuario = firebase.auth().currentUser;
+    var usuarioUid = usuario.uid;
+
+    firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
+        var datosUsuario = dataSnapshot.val()[usuarioUid];
+        datos = datosUsuario;
+        if (session) {
+            req.session.userName = datosUsuario.nombre;
+        }
+        res.render('Perfil', {datos: datosUsuario}
+        );
+    })
+}
+
+
+/* GET Pagina de login.
+*       Si ya hay un usuario logeado renderizar su perfil
+*       No hay usuario logeado render Login*/
 router.get('/Login', function (req, res, next) {
-    console.log(req.session.userName);
-
     if (req.session.userName) {
-
-        usuario = firebase.auth().currentUser;
-        var usuarioUid = usuario.uid;
-
-        firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
-
-            var datosUsuario = dataSnapshot.val()[usuarioUid];
-            console.log(datosUsuario, usuarioUid);
-
-            res.render('Perfil', {
-                    datos: datosUsuario
-                }
-            );
-
-        })
+        cogerDatosUsuarioDByRendePerfil(req, res, false)
     } else {
         res.render('Login', {title: 'Login'});
     }
@@ -60,71 +78,57 @@ router.get('/Login', function (req, res, next) {
 
 router.get('/Perfil', function (req, res, next) {
     if (req.session.userName) {
-        console.log("PERFIL" + datos.nombre);
         res.render('Perfil', {datos: datos});
     } else {
-        res.render("Login",{title: 'Login'})
+        res.render("Login", {title: 'Login'})
     }
 
 });
 
 
 router.get("/cerrar", function (req, res, next) {
+    firebase.auth().signOut().then(function () {
+        console.log("Session cerrada con firebase");
+    }).catch(function (error) {
+        // An error happened.
+    });
     req.session.destroy();
     res.render("Login");
 });
 
-
 router.get("/eliminarUsuario", function (req, res, next) {
-
     usuario = firebase.auth().currentUser;
 
-    firebase.database().ref("usuarios/" + usuario.uid).remove()
+    firebase.database().ref("usuarios/" + usuario.uid).remove();
+
+    usuario.delete()
         .then(function (t) {
-            console.log(t);
-            usuario.delete()
-                .then(function (t) {
-                    console.log("Usuario Elimiando", t);
-                    req.session.destroy();
-                    res.render("Registro");
-                })
-        });
-
-
+            console.log("Usuario Elimiando", t);
+            req.session.destroy();
+            res.render("Registro");
+        })
 })
 
 
 router.post('/registroComp', function (req, res, next) {
-    //console.log(req.body);
 
     firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.contraseña)
         .then(function (t) {
             usuario = firebase.auth().currentUser;
-
-
             usuario.sendEmailVerification()
                 .then(function () {
                     console.log(req.body);
                     res.render('Login', {title: 'Login'});
                     // Email sent.
                 }).catch(function (error) {
-                // An error happened.
+                console.log(error);
             });
 
         })
         .catch(function (error) {
             console.log(error);
-            res.render('Registro', {title: 'Registro'});
+            res.render('Registro', {title: 'Registro', error: "Ya existe un usuario con ese correo"});
         });
-
-
-    // var usuarios = firebase.database().ref("usuarios/");
-    // usuarios.push({
-    // 	"nombre": req.body.nombre,
-    // 	"contraseña": req.body.contraseña
-    // });
-
-
 });
 
 
@@ -140,9 +144,6 @@ router.post('/Login', function (req, res, next) {
                 firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
 
                     var datosUsuario = dataSnapshot.val()[usuarioUid];
-                    /*console.log(datosUsuario, usuarioUid);
-
-                    console.log(datosUsuario.nombre);*/
 
                     if (!datosUsuario) {
                         res.render('DatosUsuario');
@@ -150,14 +151,11 @@ router.post('/Login', function (req, res, next) {
                         req.session.userName = datosUsuario.nombre;
                         datos = datosUsuario;//Para poder enviar los datos al get de /Perfil
 
-                        res.render('Perfil', {
-                                datos: datosUsuario
-                            }
-                        );
+                        res.render('Perfil', {datos: datosUsuario});
                     }
                 })
             } else {
-                console.log("No verif");
+                console.log("Correo no verificado");
                 res.render('Login', {title: 'Login', warning: "Correo no verificado"});
             }
         })
@@ -168,9 +166,6 @@ router.post('/Login', function (req, res, next) {
 });
 
 router.post('/datosUsuario', function (req, res, next) {
-    console.log(req.body);
-
-
     var usuarios = firebase.database().ref("usuarios/" + usuario.uid);
     usuarios.set({
         "nombre": req.body.nombre,
@@ -179,94 +174,70 @@ router.post('/datosUsuario', function (req, res, next) {
         "playlists": 0
     });
 
+    cogerDatosUsuarioDByRendePerfil(req, res, true);
+});
 
+
+//TopCaniones y playlist del Perfil añadir y visualizar los datos de la base de datos
+function cogerDatosUsuarioRenderVista(req, res, vista) {
     usuario = firebase.auth().currentUser;
     var usuarioUid = usuario.uid;
 
     firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
 
         var datosUsuario = dataSnapshot.val()[usuarioUid];
-        /*console.log(datosUsuario, usuarioUid);
-
-        console.log(datosUsuario.nombre);*/
-
-
         req.session.userName = datosUsuario.nombre;
         datos = datosUsuario;//Para poder enviar los datos al get de /Perfil
 
-        res.render('Perfil', {
-                datos: datosUsuario
-            }
-        );
-
+        res.render(vista, {pagina: vista, datos: datos})
     })
-
-
-});
-
+}
 
 //Acceso a la vista TopCanciones con los datos del usuario de firebase, encaso de no haber iniciado session se va al login
 router.get("/TopCanciones", function (req, res, next) {
-
     if (req.session.userName) {
-        usuario = firebase.auth().currentUser;
-        var usuarioUid = usuario.uid;
-
-        firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
-
-            var datosUsuario = dataSnapshot.val()[usuarioUid];
-            /*console.log(datosUsuario, usuarioUid);
-
-            console.log(datosUsuario.nombre);*/
-
-
-            req.session.userName = datosUsuario.nombre;
-            datos = datosUsuario;//Para poder enviar los datos al get de /Perfil
-
-            res.render("TopCanciones", {pagina: "Top Canciones", datos: datos})
-
-
-        })
+        cogerDatosUsuarioRenderVista(req, res, "TopCanciones");
     } else {
-        res.render("Login")
+        res.render("Login", {title: "Login"})
     }
+});
 
-})
+
+router.get("/Playlists", function (req, res, next) {
+    if (req.session.userName) {
+        cogerDatosUsuarioRenderVista(req, res, "Playlists");
+    } else {
+        res.render("Login", {title: "Login"})
+    }
+});
+
+
+function añadirDatosDB(req, res, vista, elementoDB, variablePost) {
+    usuario = firebase.auth().currentUser;
+    var usuarioUid = usuario.uid;
+    firebase.database().ref("usuarios/" + usuarioUid + "/" + elementoDB)
+        .push(
+            req.body[variablePost]
+        );
+
+    firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
+        var datosUsuario = dataSnapshot.val()[usuarioUid];
+        req.session.userName = datosUsuario.nombre;
+        datos = datosUsuario;//Para poder enviar los datos al get de /Perfil
+
+        res.render(vista, {pagina: vista, datos: datos})
+    })
+}
 
 
 //Post de la nueva cancion (TOPCANCIONES) del usuario a la base de datos
 router.post("/TopCanciones", function (req, res, next) {
+    añadirDatosDB(req, res, "TopCanciones", "canciones", "cancion")
+});
 
-    //console.log(req.body);
-
-    usuario = firebase.auth().currentUser;
-    var usuarioUid = usuario.uid;
-
-
-    var canciones = [];
-
-
-    len = datos.canciones.length;
-    for (i = 0; i < len; i += 1) {
-
-
-    }
-
-    canciones.push(req.body.cancion);
-
-    firebase.database().ref("usuarios/" + usuarioUid + "/canciones")
-        .push(
-            canciones
-        )
-
-    firebase.database().ref("usuarios/").once("value", function (dataSnapshot) {
-        var datosUsuario = dataSnapshot.val()[usuarioUid];
-        req.session.userName = datosUsuario.nombre;
-        datos = datosUsuario;//Para poder enviar los datos al get de /Perfil
-
-        res.render("TopCanciones", {pagina: "Top Canciones", datos: datos})
-    })
-})
+router.post("/Playlists", function (req, res, next) {
+    añadirDatosDB(req, res, "Playlists", "playlists", "playlist")
+});
 
 
 module.exports = router;

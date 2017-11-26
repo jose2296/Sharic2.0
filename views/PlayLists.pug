@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href="/css/nav2.css")
+    link(rel='stylesheet', href="/css/TopCanciones.css")
+    body
+        include nav2
+        .container
+            header
+                .atras
+                    p
+                        a(href="/Perfil") Atras
+                h2= pagina
+            .contenido
+                p Añadir Playlist
+                    a(href="#")#agregar Añadir
+                form(action="" method="post")#nuevaCancion.oculto
+                    input(type="text" name="playlist")
+                    input(type="submit" value="Añadir" name="Añadir")
+                ul
+                    if datos.playlists
+                        for item in datos.playlists
+                            li
+                                a(href="#")= item
+        script.
+            document.getElementById("agregar").addEventListener("click", function () {
+                document.getElementById("nuevaCancion").classList.toggle("oculto")
+            })
