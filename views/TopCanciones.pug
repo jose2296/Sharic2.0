@@ -16,13 +16,16 @@ block content
                     a(href="#")#agregar Añadir
                 form(action="" method="post")#nuevaCancion.oculto
                     input(type="text" name="cancion")
-                    input(type="submit" value="Añadir" name="Añadir")
+                    input(type="submit" onclick="buscar()" value="Añadir" name="Añadir")
                 ul
                     if datos.canciones
                         for item in datos.canciones
                             li
                                 a(href="#")= item
+        #respuesta= data
         script.
             document.getElementById("agregar").addEventListener("click", function () {
                 document.getElementById("nuevaCancion").classList.toggle("oculto")
-            })
+            });
+
+    script(src="/js/funciones.js")
